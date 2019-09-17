@@ -1,0 +1,75 @@
+android_library(
+    name = "lib",
+    srcs = glob(["app/src/main/java/**"]),
+    assets = glob(["app/src/main/assets/**"]),
+    assets_dir = "app/src/main/assets/",
+    custom_package = "com.example.android.persistence",
+    manifest = "app/src/main/AndroidManifest.xml",
+    resource_files = glob(["app/src/main/res/**"]),
+    deps = [
+        ":androidx_lifecycle_lifecycle_compiler_library",
+        ":androidx_room_room_compiler_library",
+        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_appcompat_appcompat",
+        "@maven//:androidx_legacy_legacy_support_v4",
+        "@maven//:androidx_sqlite_sqlite",
+        "@maven//:com_google_android_material_material",
+        "@maven//:io_reactivex_rxjava2_rxandroid",
+        "@maven//:io_reactivex_rxjava2_rxjava",
+    ],
+)
+
+android_binary(
+    name = "app",
+    custom_package = "com.example.android.persistence",
+    manifest = "app/src/main/AndroidManifest.xml",
+    manifest_values = {
+        "minSdkVersion": "14",
+    },
+    multidex = "native",
+    deps = [":lib"],
+)
+
+java_plugin(
+    name = "androidx_lifecycle_lifecycle_compiler_plugin",
+    processor_class = "androidx.lifecycle.LifecycleProcessor",
+    deps = [
+        "@maven//:androidx_lifecycle_lifecycle_compiler",
+    ],
+)
+
+java_library(
+    name = "androidx_lifecycle_lifecycle_compiler_library",
+    exported_plugins = [
+        ":androidx_lifecycle_lifecycle_compiler_plugin",
+    ],
+    neverlink = True,
+    exports = [
+        "@maven//:androidx_lifecycle_lifecycle_compiler",
+        "@maven//:androidx_lifecycle_lifecycle_extensions",
+        "@maven//:androidx_lifecycle_lifecycle_runtime",
+        "@maven//:androidx_lifecycle_lifecycle_viewmodel",
+    ],
+)
+
+java_plugin(
+    name = "androidx_room_room_compiler_plugin",
+    processor_class = "androidx.room.RoomProcessor",
+    deps = [
+        "@maven//:androidx_room_room_compiler",
+    ],
+)
+
+java_library(
+    name = "androidx_room_room_compiler_library",
+    exported_plugins = [
+        ":androidx_room_room_compiler_plugin",
+    ],
+    neverlink = True,
+    exports = [
+        "@maven//:androidx_room_room_common",
+        "@maven//:androidx_room_room_compiler",
+        "@maven//:androidx_room_room_runtime",
+        "@maven//:androidx_room_room_rxjava2",
+    ],
+)
